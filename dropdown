@@ -1,0 +1,78 @@
+package SeliniumTesting;
+
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+
+public class DropDown {
+
+	public static void main(String[] args) throws Exception {
+		// Setting the property of chrome Browser and passing chrome driver path
+		System.setProperty("webdriver.chrome.driver",
+				"D:\\Software\\chromedriver\\chromedriver_win32\\chromedriver.exe");
+		WebDriver driver = new ChromeDriver();
+		driver.manage().window().maximize();
+		driver.get("https://www.facebook.com/");
+		driver.findElement(By.xpath("//a[@data-testid='open-registration-form-button']")).click();
+		Thread.sleep(3000);
+
+		// 1st way-not recommended but industry widely use
+		List<WebElement> birthMonth = driver.findElements(By.xpath("//select[@id='month']/option"));
+		System.out.println("Total Dropdown list:- " + birthMonth.size());
+		System.out.println(birthMonth.get(8).isEnabled());
+		birthMonth.get(8).click();
+		Thread.sleep(3000);
+
+		// 2nd way-Recommended
+		WebElement bm = driver.findElement(By.xpath("//select[@id='month']"));
+		Select month = new Select(bm);// select class constructor
+		month.selectByVisibleText("Apr");// select by visible text
+		month.selectByIndex(10);// select by index
+		month.selectByValue("12");// select by value
+		System.out.println(month.getFirstSelectedOption().getText());// return latest selected value
+		Thread.sleep(3000);
+		
+		// 3rd way
+		List<WebElement> monthList = month.getOptions();
+		System.out.println("Total Dropdown list:- " + birthMonth.size());
+		for (int i = 0; i < monthList.size(); i++) {
+			if (monthList.get(i).getText().equalsIgnoreCase("Aug")) {
+				monthList.get(i).click();
+				Thread.sleep(3000);
+
+		// 4th way
+			WebElement cm = driver.findElement(By.xpath("//select[@id='month']"));
+					cm.sendKeys("Feb");
+					Thread.sleep(3000);
+	
+		// 5th way
+		Thread.sleep(4000);
+		driver.findElement(By.xpath("//select[@id='month']")).sendKeys("March");
+		Thread.sleep(3000);
+
+	
+		// 6th Way
+		System.out.println(month.isMultiple());// False
+		month.selectByVisibleText("Dec");// Dec
+		month.selectByIndex(10);// Nov
+		month.selectByValue("10");// Oct
+		Thread.sleep(3000);
+
+	
+		// Deselect the Selected Dropdown value
+		month.selectByVisibleText("Dec");// Dec
+		month.selectByIndex(4);// Nov
+		month.selectByValue("4");// Oct
+		month.deselectAll();// Deselect All Selected Value
+		Thread.sleep(3000);
+
+		
+			}
+		}
+
+	}
+}
